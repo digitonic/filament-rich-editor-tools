@@ -2,9 +2,9 @@
 
 namespace Digitonic\FilamentRichEditorTools\Tests;
 
+use Digitonic\FilamentRichEditorTools\FilamentRichEditorToolsServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Digitonic\FilamentRichEditorTools\FilamentRichEditorToolsServiceProvider;
 
 class TestCase extends Orchestra
 {

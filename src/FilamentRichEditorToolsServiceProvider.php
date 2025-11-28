@@ -2,15 +2,14 @@
 
 namespace Digitonic\FilamentRichEditorTools;
 
+use Digitonic\FilamentRichEditorTools\Commands\FilamentRichEditorToolsCommand;
 use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\Plugins\TableOfContentsPlugin;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Digitonic\FilamentRichEditorTools\Commands\FilamentRichEditorToolsCommand;
 
 class FilamentRichEditorToolsServiceProvider extends PackageServiceProvider
 {
-
     public function boot(): void
     {
         $this->app->afterResolving(RichContentRenderer::class, function (RichContentRenderer $renderer): void {

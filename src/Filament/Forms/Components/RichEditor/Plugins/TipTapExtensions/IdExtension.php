@@ -4,7 +4,8 @@ namespace Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor
 
 use Tiptap\Core\Extension;
 
-class IdExtension extends Extension {
+class IdExtension extends Extension
+{
     /**
      * @var string
      */
