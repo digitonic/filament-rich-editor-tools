@@ -1,10 +1,11 @@
 <?php
 
-namespace Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\TipTapExtensions;
+namespace Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\Plugins\TipTapExtensions;
 
 use Tiptap\Core\Extension;
 
-class IdExtension extends Extension {
+class IdExtension extends Extension
+{
     /**
      * @var string
      */

@@ -2,7 +2,7 @@
 
 namespace Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\Plugins;
 
-use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\TipTapExtensions\IdExtension;
+use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\Plugins\TipTapExtensions\IdExtension;
 use Filament\Forms\Components\RichEditor\Plugins\Contracts\RichContentPlugin;
 use Tiptap\Core\Extension;
 
