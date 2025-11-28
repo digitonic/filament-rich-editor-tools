@@ -1,84 +1,130 @@
-# A package designed to improve the existing Filament Rich Editor
+# Filament Rich Editor Tools (Filament v4)
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/digitonic/filament-rich-editor-tools.svg?style=flat-square)](https://packagist.org/packages/digitonic/filament-rich-editor-tools)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/digitonic/filament-rich-editor-tools/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/digitonic/filament-rich-editor-tools/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/digitonic/filament-rich-editor-tools/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/digitonic/filament-rich-editor-tools/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/digitonic/filament-rich-editor-tools.svg?style=flat-square)](https://packagist.org/packages/digitonic/filament-rich-editor-tools)
+A Laravel package that provides utilities and extensions for Filament's Rich Editor. Today, it focuses on a robust, hierarchical Table of Contents (TOC) feature built on TipTap, with automatic project-wide registration and convenient Renderer macros.
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+Key features
+- Automatic project-wide plugin registration via the service provider.
+- Generate a hierarchical Table of Contents from editor content.
+- Assign stable, unique heading IDs for in-page navigation.
+- Built to be compatible with Filament v4, Livewire v3, and Laravel 12.
 
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/filament-rich-editor-tools.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/filament-rich-editor-tools)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+## Requirements
+- PHP 8.4+
+- Laravel 12
+- Filament v4 Rich Editor
+- Livewire v3
 
 ## Installation
 
-You can install the package via composer:
+Install the package via Composer:
 
 ```bash
 composer require digitonic/filament-rich-editor-tools
 ```
 
-You can publish and run the migrations with:
+The service provider will be auto-discovered. No manual registration is needed.
 
-```bash
-php artisan vendor:publish --tag="filament-rich-editor-tools-migrations"
-php artisan migrate
-```
+## What it adds
 
-You can publish the config file with:
+This package adds:
 
-```bash
-php artisan vendor:publish --tag="filament-rich-editor-tools-config"
-```
+1) A TipTap PHP extension (Heading ID support) automatically registered on every Filament Rich Editor renderer instance.
+2) Macros on Filament's `RichContentRenderer` to work with Table of Contents data:
+   - `toTableOfContents(int $maxDepth = 3): array` — returns a nested TOC array from the current renderer content.
+   - `processHeaderIds(Editor $editor, int $maxDepth = 3): void` — assigns unique IDs to heading nodes inside a TipTap `Editor`.
 
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="filament-rich-editor-tools-views"
-```
+These are registered once and applied automatically to all renderers.
 
 ## Usage
 
+### Generate a Table of Contents from content
+
+Given a Filament `RichEditor` field or any HTML you pass to `RichContentRenderer`:
+
 ```php
-$filamentRichEditorTools = new Digitonic\FilamentRichEditorTools();
-echo $filamentRichEditorTools->echoPhrase('Hello, Digitonic!');
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
+
+$renderer = RichContentRenderer::make('<h1>Intro</h1><p>Text</p><h2>Details</h2>');
+
+$toc = $renderer->toTableOfContents(maxDepth: 3);
+
+// Example structure:
+// [
+//   [
+//     'id' => 'intro',
+//     'text' => 'Intro',
+//     'depth' => 1,
+//     'subs' => [
+//       ['id' => 'details', 'text' => 'Details', 'depth' => 2],
+//     ],
+//   ],
+// ]
 ```
+
+The IDs are derived from the heading text and are deduplicated automatically (e.g., `intro`, `intro-1`, `intro-2`).
+
+### Assign stable IDs to headings in an Editor
+
+If you’re working directly with a TipTap `Editor`, you can assign IDs to its headings:
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
+use Tiptap\Core\Editor;
+
+$editor = new Editor([
+    'content' => '<h1>Intro</h1><h2>Details</h2>',
+]);
+
+RichContentRenderer::make('')->processHeaderIds($editor, maxDepth: 3);
+
+// The editor now contains heading nodes with unique `id` attributes.
+```
+
+### Automatic plugin registration
+
+The package service provider hooks into Laravel’s container and adds the Heading ID TipTap extension to every `RichContentRenderer` resolved by the container. You don’t need to manually add the plugin in your forms or pages.
+
+## Configuration
+
+At present, there is no user-facing configuration. Defaults are sensible:
+- `maxDepth` defaults to 3 (h1..h3). You can override per-call.
+
+Future versions may introduce config for depth, slug strategy, and attribute names.
 
 ## Testing
 
-```bash
-composer test
+We recommend writing feature tests around your Filament pages/components and asserting the TOC output when relevant. Example (Pest):
+
+```php
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
+
+it('builds a nested table of contents', function () {
+    $renderer = RichContentRenderer::make('<h1>Intro</h1><h2>Details</h2><h2>More</h2>');
+    $toc = $renderer->toTableOfContents();
+
+    expect($toc)
+        ->toBeArray()
+        ->and($toc[0]['text'] ?? null)->toBe('Intro')
+        ->and($toc[0]['subs'][0]['text'] ?? null)->toBe('Details');
+});
 ```
 
-## Changelog
+Run your tests:
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+```bash
+php artisan test --filter=table of contents
+```
+
+## FAQ
+
+- Do I need to import or call anything to register the plugin? No — the package auto-registers via the service provider.
+- Will it interfere with my existing editor setup? It only adds a stable `id` attribute to heading nodes and exposes TOC macros. It doesn’t alter your content beyond that.
+- Does it work with dark mode or custom themes? Yes; the extension affects document structure, not presentation.
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
-## Credits
-
-- [Sean O'Donnell](https://github.com/digitonic)
-- [All Contributors](../../contributors)
+Contributions are welcome. Please open issues or PRs describing your use case and proposed changes.
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The MIT License (MIT). See `LICENSE.md` for details.
