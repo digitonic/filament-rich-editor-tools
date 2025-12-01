@@ -23,11 +23,11 @@ class FilamentRichEditorToolsServiceProvider extends PackageServiceProvider
         });
 
         // adjust the path if your service provider sits in src/ — this assumes src/ is one level deep
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'filament-rich-editor-tools');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'filament-rich-editor-tools');
 
         // optional publish
         $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/filament-rich-editor-tools'),
+            __DIR__.'/../resources/views' => resource_path('views/vendor/filament-rich-editor-tools'),
         ], 'views');
 
         RichContentRendererMacros::register();
@@ -39,7 +39,7 @@ class FilamentRichEditorToolsServiceProvider extends PackageServiceProvider
         $package
             ->name('filament-rich-editor-tools')
             ->hasConfigFile()
-            //->hasViews() doesn't work
+            // ->hasViews() doesn't work
             ->hasCommand(FilamentRichEditorToolsCommand::class);
     }
 }
