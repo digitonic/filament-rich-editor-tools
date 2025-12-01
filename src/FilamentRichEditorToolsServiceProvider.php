@@ -22,16 +22,13 @@ class FilamentRichEditorToolsServiceProvider extends PackageServiceProvider
             }
         });
 
-        //        $this->app->afterResolving(RichEditor::class, function (RichEditor $editor): void {
-        //            $alreadyRegistered = collect($editor->getCustomBlocks())
-        //                ->contains(fn ($block) => $block instanceof TableContentsBlock);
-        //
-        //            if (! $alreadyRegistered) {
-        //                $editor->customBlocks(array_merge($currentBlocks, [
-        //                    TableContentsBlock::class,
-        //                ]));
-        //            }
-        //        });
+        // adjust the path if your service provider sits in src/ — this assumes src/ is one level deep
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'filament-rich-editor-tools');
+
+        // optional publish
+        $this->publishes([
+            __DIR__ . '/../resources/views' => resource_path('views/vendor/filament-rich-editor-tools'),
+        ], 'views');
 
         RichContentRendererMacros::register();
     }
@@ -42,7 +39,7 @@ class FilamentRichEditorToolsServiceProvider extends PackageServiceProvider
         $package
             ->name('filament-rich-editor-tools')
             ->hasConfigFile()
-            ->hasViews()
+            //->hasViews() doesn't work
             ->hasCommand(FilamentRichEditorToolsCommand::class);
     }
 }
