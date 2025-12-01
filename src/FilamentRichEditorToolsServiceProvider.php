@@ -22,6 +22,17 @@ class FilamentRichEditorToolsServiceProvider extends PackageServiceProvider
             }
         });
 
+        //        $this->app->afterResolving(RichEditor::class, function (RichEditor $editor): void {
+        //            $alreadyRegistered = collect($editor->getCustomBlocks())
+        //                ->contains(fn ($block) => $block instanceof TableContentsBlock);
+        //
+        //            if (! $alreadyRegistered) {
+        //                $editor->customBlocks(array_merge($currentBlocks, [
+        //                    TableContentsBlock::class,
+        //                ]));
+        //            }
+        //        });
+
         RichContentRendererMacros::register();
     }
 

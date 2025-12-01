@@ -7,4 +7,8 @@ return [
         'prefix' => '', // This prefix determines if your heading IDs will have a prefix or not
     ],
 
+    'content_blocks' => [
+
+    ],
+
 ];

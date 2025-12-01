@@ -37,6 +37,22 @@ These are registered once and applied automatically to all renderers.
 
 ## Usage
 
+### Use our editor
+
+In your Filament form or page, to get our rich editor do the following:
+
+```php
+RichEditorUtil::make('raw_content'),
+````
+
+### Use our Renderer
+
+In your Filament form or page, to get our renderer do the following:
+
+```php
+RichEditorUtil::render('raw_content'),
+````
+
 ### Generate a Table of Contents from content
 
 Given a Filament `RichEditor` field or any HTML you pass to `RichContentRenderer`:
@@ -89,7 +105,10 @@ The package service provider hooks into Laravel’s container and adds the Headi
 At present, there is no user-facing configuration. Defaults are sensible:
 - `maxDepth` defaults to 3 (h1..h3). You can override per-call.
 
-Future versions may introduce config for depth, slug strategy, and attribute names.
+### Custom Blocks
+When using our editor/renderer you may want to implement your own custom blocks,
+You can add to the custom blocks by editing the config `content_blocks` and passing in an array
+of custom block classes.
 
 ## Testing
 
