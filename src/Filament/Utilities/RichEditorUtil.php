@@ -3,12 +3,12 @@
 namespace Digitonic\FilamentRichEditorTools\Filament\Utilities;
 
 use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ButtonBlock;
-use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\TableContentsBlock;
-use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\VideoBlock;
 use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\GoogleAdBlock;
 use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ImageAdBlock;
 use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ProsAndConsBlock;
+use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\TableContentsBlock;
 use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\TwitterEmbedBlock;
+use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\VideoBlock;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Filament\Forms\Components\RichEditor\TextColor;
@@ -80,7 +80,7 @@ class RichEditorUtil
             ImageAdBlock::class,
             VideoBlock::class,
             ProsAndConsBlock::class,
-            TableContentsBlock::class
+            TableContentsBlock::class,
         ]);
 
         return $class
