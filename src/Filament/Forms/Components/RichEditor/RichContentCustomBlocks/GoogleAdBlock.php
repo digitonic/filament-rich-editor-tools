@@ -7,9 +7,6 @@ use Filament\Forms\Components\RichEditor\RichContentCustomBlock;
 
 class GoogleAdBlock extends RichContentCustomBlock
 {
-    //     public string $preview = 'filament.tiptapblocks.previews.google-ad';
-    //
-    //    public string $rendered = 'filament.tiptapblocks.rendered.google-ad';
     public static function getId(): string
     {
         return 'google_ad';
@@ -31,13 +28,19 @@ class GoogleAdBlock extends RichContentCustomBlock
 
     public static function toPreviewHtml(array $config): string
     {
-        return view('filament.tiptapblocks.previews.google-ad', [
-            //
-        ])->render();
+        /** @var view-string $view */
+        $view = 'filament.tiptapblocks.previews.google-ad';
+
+        return view($view, $config)
+            ->render();
     }
 
     public static function toHtml(array $config, array $data): string
     {
-        return view('filament.tiptapblocks.rendered.google-ad', $config)->render();
+        /** @var view-string $view */
+        $view = 'filament.tiptapblocks.rendered.google-ad';
+
+        return view($view, $config)
+            ->render();
     }
 }

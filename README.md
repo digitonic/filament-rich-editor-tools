@@ -32,10 +32,15 @@ This package adds:
 2) Macros on Filament's `RichContentRenderer` to work with Table of Contents data:
    - `toTableOfContents(int $maxDepth = 3): array` — returns a nested TOC array from the current renderer content.
    - `processHeaderIds(Editor $editor, int $maxDepth = 3): void` — assigns unique IDs to heading nodes inside a TipTap `Editor`.
-
+3) A command used to migrate old blocks from tiptap format to rich editor format
 These are registered once and applied automatically to all renderers.
 
 ## Usage
+
+### Convert your blocks
+`php artisan filament-rich-editor-tools:migrate-blocks "App\Models\Page" blocks`
+
+Replace the model and field name as needed. This will overwrite existing DB records. So take a backup.
 
 ### Use our editor
 

@@ -1,10 +1,11 @@
 @props([
-    'articleId',
+    'modelId',
+    'modelClass'
 ])
 @php
-    $article = \App\Models\Article::withoutGlobalScopes([
+    $model = $modelClass::withoutGlobalScopes([
         \App\Models\Scopes\DraftedScope::class
-    ])->find($articleId);
+    ])->find($modelId);
 
     $toc = $article
         ? \Filament\Forms\Components\RichEditor\RichContentRenderer::make($article->raw_content)->toTableOfContents()

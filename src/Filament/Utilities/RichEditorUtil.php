@@ -67,7 +67,6 @@ class RichEditorUtil
                 ['undo', 'redo'],
             ]);
 
-        /** @phpstan-ignore-next-line  */
         return self::commonChainables($editor);
     }
 

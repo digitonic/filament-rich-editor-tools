@@ -39,11 +39,19 @@ class ButtonBlock extends RichContentCustomBlock
 
     public static function toPreviewHtml(array $config): string
     {
-        return view('filament.tiptapblocks.previews.button', $config)->render();
+        /** @var view-string $view */
+        $view = 'filament.tiptapblocks.previews.button';
+
+        return view($view, $config)
+            ->render();
     }
 
     public static function toHtml(array $config, array $data): string
     {
-        return view('filament.tiptapblocks.rendered.button', $config)->render();
+        /** @var view-string $view */
+        $view = 'filament.tiptapblocks.rendered.button';
+
+        return view($view, $config)
+            ->render();
     }
 }

@@ -30,13 +30,17 @@ class VideoBlock extends RichContentCustomBlock
 
     public static function toPreviewHtml(array $config): string
     {
-        return view('filament.tiptapblocks.previews.video', [
-            //
-        ])->render();
+        /** @var view-string $view */
+        $view = 'filament.tiptapblocks.previews.video';
+
+        return view($view)->render();
     }
 
     public static function toHtml(array $config, array $data): string
     {
-        return view('filament.tiptapblocks.rendered.video', $config)->render();
+        /** @var view-string $view */
+        $view = 'filament.tiptapblocks.rendered.video';
+
+        return view($view, $config)->render();
     }
 }

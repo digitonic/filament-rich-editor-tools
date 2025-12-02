@@ -32,15 +32,18 @@ class ImageAdBlock extends RichContentCustomBlock
 
     public static function toPreviewHtml(array $config): string
     {
-        return view('filament.tiptapblocks.previews.image-ad', [
-            //
-        ])->render();
+        /** @var view-string $view */
+        $view = 'filament.tiptapblocks.previews.image-ad';
+
+        return view($view, $config)
+            ->render();
     }
 
     public static function toHtml(array $config, array $data): string
     {
-        return view('filament.tiptapblocks.rendered.image-ad', [
-            //
-        ])->render();
+        /** @var view-string $view */
+        $view = 'filament.tiptapblocks.rendered.image-ad';
+
+        return view($view, $config)->render();
     }
 }

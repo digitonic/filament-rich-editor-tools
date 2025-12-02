@@ -5,6 +5,7 @@ namespace Digitonic\FilamentRichEditorTools\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+
 class FilamentRichEditorToolsCommand extends Command
 {
     protected $signature = 'filament-rich-editor-tools:migrate-blocks {model : Fully qualified model class, e.g. App\\Models\\Article} {column : Column containing rich editor blocks} {--dry : Run without saving changes}';
@@ -24,16 +25,9 @@ class FilamentRichEditorToolsCommand extends Command
             return self::INVALID;
         }
 
-        /** @var class-string<Model> $modelClass */
-        if (! is_subclass_of($modelClass, Model::class)) {
-            $this->error("Provided class is not an Eloquent Model: {$modelClass}");
-
-            return self::INVALID;
-        }
-
         // Instantiate model and ensure column exists
         /** @var Model $model */
-        $model = new $modelClass();
+        $model = new $modelClass;
         $table = $model->getTable();
 
         if (! \Schema::hasColumn($table, $column)) {
@@ -63,6 +57,7 @@ class FilamentRichEditorToolsCommand extends Command
 
                     if ($raw === null) {
                         $skipped++;
+
                         continue;
                     }
 
@@ -70,6 +65,7 @@ class FilamentRichEditorToolsCommand extends Command
                     $data = is_string($raw) ? json_decode($raw, true) : $raw;
                     if (! is_array($data)) {
                         $skipped++;
+
                         continue;
                     }
 
@@ -79,11 +75,13 @@ class FilamentRichEditorToolsCommand extends Command
 
                     if ($original === $migratedJson) {
                         $skipped++;
+
                         continue;
                     }
 
                     if ($dryRun) {
                         $updated++;
+
                         continue;
                     }
 
@@ -105,7 +103,7 @@ class FilamentRichEditorToolsCommand extends Command
     /**
      * Migrate tiptapBlock -> customBlock recursively within the rich content JSON.
      *
-     * @param array<string,mixed> $data
+     * @param  array<string,mixed>  $data
      * @return array<string,mixed>
      */
     protected function migrateBlocks(array $data): array
@@ -124,7 +122,7 @@ class FilamentRichEditorToolsCommand extends Command
 
             // 2) Move attrs.type -> attrs.id (without clobbering id)
             if (isset($node['attrs']) && is_array($node['attrs'])) {
-                $attrs =& $node['attrs'];
+                $attrs = &$node['attrs'];
                 if (array_key_exists('type', $attrs)) {
                     if (! array_key_exists('id', $attrs) || $attrs['id'] === null || $attrs['id'] === '') {
                         $attrs['id'] = $attrs['type'];
@@ -140,7 +138,7 @@ class FilamentRichEditorToolsCommand extends Command
                     $attrs['id'] = $id;
                 }
 
-                if(isset($attrs['data'])) {
+                if (isset($attrs['data'])) {
                     $attrs['config'] = $attrs['data'];
                     unset($attrs['data']);
                 }
