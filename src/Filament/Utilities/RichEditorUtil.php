@@ -2,6 +2,7 @@
 
 namespace Digitonic\FilamentRichEditorTools\Filament\Utilities;
 
+use Digitonic\FilamentRichEditorTools\Enums\RenderType;
 use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ButtonBlock;
 use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\GoogleAdBlock;
 use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ImageAdBlock;
@@ -22,11 +23,12 @@ class RichEditorUtil
     /**
      * @param  array<string,mixed>|string|null  $content
      */
-    public static function render(array|null|string $content): string
+    public static function render(array|null|string $content, RenderType $renderType = RenderType::HTML): string|array|RichContentRenderer
     {
         $renderer = RichContentRenderer::make($content);
+        $renderer = self::commonChainables($renderer);
 
-        return self::commonChainables($renderer)->toUnsafeHtml();
+        return $renderType->getRenderMethod($renderer);
     }
 
     public static function make(string $field, string $label = 'Content'): RichEditor
@@ -34,7 +36,6 @@ class RichEditorUtil
         $editor = RichEditor::make($field)
             ->label($label)
             ->json()
-            ->required()
             ->columnSpan([
                 'sm' => 2,
             ])

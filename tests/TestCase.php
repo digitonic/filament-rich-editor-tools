@@ -20,6 +20,10 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
+            \Livewire\LivewireServiceProvider::class,
+            \Filament\Support\SupportServiceProvider::class,
+            \BladeUI\Icons\BladeIconsServiceProvider::class,
+            \Filament\FilamentServiceProvider::class,
             FilamentRichEditorToolsServiceProvider::class,
         ];
     }
