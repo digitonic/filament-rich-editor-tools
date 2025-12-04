@@ -8,7 +8,7 @@
     ])->find($modelId);
 
     $toc = $article
-        ? \Filament\Forms\Components\RichEditor\RichContentRenderer::make($article->raw_content)->toTableOfContents()
+        ? \Digitonic\FilamentRichEditorTools\Filament\Utilities\RichEditorUtil::render($article->raw_content, \Digitonic\FilamentRichEditorTools\Enums\RenderType::$toc)
         : [];
 
     /**
