@@ -13,6 +13,7 @@ class FilamentRichEditorToolsServiceProvider extends PackageServiceProvider
 {
     public function boot(): void
     {
+        // Rich Content Plugins
         $this->app->afterResolving(RichContentRenderer::class, function (RichContentRenderer $renderer): void {
             $alreadyRegistered = collect($renderer->getPlugins())
                 ->contains(fn ($plugin) => $plugin instanceof TableOfContentsPlugin);
@@ -22,21 +23,20 @@ class FilamentRichEditorToolsServiceProvider extends PackageServiceProvider
             }
         });
 
-        // adjust the path if your service provider sits in src/ — this assumes src/ is one level deep
+        // Views
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'filament-rich-editor-tools');
-
-        // optional publish
         $this->publishes([
             __DIR__.'/../resources/views' => resource_path('views/vendor/filament-rich-editor-tools'),
         ], 'views');
 
-        // Register commands
+        // Commands
         if ($this->app->runningInConsole()) {
             $this->commands([
                 FilamentRichEditorToolsCommand::class,
             ]);
         }
 
+        // Table of Contents Macros
         RichContentRendererMacros::register();
     }
 

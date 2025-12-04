@@ -42,6 +42,11 @@ These are registered once and applied automatically to all renderers.
 
 Replace the model and field name as needed. This will overwrite existing DB records. So take a backup.
 
+If you have a complex JSON structure with your rich editor located on something like `meta.content` you can use dot notation to specify the field.
+
+`php artisan filament-rich-editor-tools:migrate-blocks "App\Models\Page" meta.content`
+
+
 ### Use our editor
 
 In your Filament form or page, to get our rich editor do the following:

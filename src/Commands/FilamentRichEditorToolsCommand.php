@@ -18,6 +18,7 @@ class FilamentRichEditorToolsCommand extends Command
         $modelClass = (string) $this->argument('model');
         $column = (string) $this->argument('column');
         $dryRun = (bool) $this->option('dry');
+        $dotNotation = false;
 
         if (! class_exists($modelClass)) {
             $this->error("Model class not found: {$modelClass}");
@@ -29,6 +30,13 @@ class FilamentRichEditorToolsCommand extends Command
         /** @var Model $model */
         $model = new $modelClass;
         $table = $model->getTable();
+
+        // There is a chance that the column provided will be in dot notation to access JSON fields.
+        // We need to extract the base column name for the query.
+        if (Str::contains($column, '.')) {
+            $dotNotation = true;
+            $column = Str::before($column, '.');
+        }
 
         if (! \Schema::hasColumn($table, $column)) {
             $this->error("Column '{$column}' does not exist on table '{$table}'.");
@@ -50,10 +58,15 @@ class FilamentRichEditorToolsCommand extends Command
         $skipped = 0;
 
         $query->orderBy($model->getKeyName())
-            ->chunkById(200, function ($records) use (&$updated, &$skipped, $column, $dryRun): void {
+            ->chunkById(200, function ($records) use (&$updated, &$skipped, $column, $dryRun, $dotNotation): void {
                 /** @var Model $record */
                 foreach ($records as $record) {
-                    $raw = $record->{$column};
+                    // If dot notation was used, we need to extract the JSON field from the column
+                    if ($dotNotation) {
+                        $raw = data_get($record->{$column}, Str::after($this->argument('column'), '.'));
+                    } else {
+                        $raw = $record->{$column};
+                    }
 
                     if ($raw === null) {
                         $skipped++;
@@ -83,6 +96,13 @@ class FilamentRichEditorToolsCommand extends Command
                         $updated++;
 
                         continue;
+                    }
+
+                    // If dot notation was used, we need to set the JSON field back into the column
+                    if ($dotNotation) {
+                        $fullData = $record->{$column} ?? [];
+                        data_set($fullData, Str::after($this->argument('column'), '.'), $migrated);
+                        $migrated = $fullData;
                     }
 
                     $record->{$column} = $migrated;
