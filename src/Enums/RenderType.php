@@ -29,6 +29,12 @@ enum RenderType: int implements HasLabel
      */
     public function getRenderMethod(RichContentRenderer $renderer): mixed
     {
+        // If the content is empty, we're better just returning an empty string as the methods
+        // require a proper content structure
+        if (empty($renderer->content)) {
+            return '';
+        }
+
         return match ($this) {
             self::HTML => $renderer->toHtml(),
             self::ARRAY => $renderer->toArray(),
