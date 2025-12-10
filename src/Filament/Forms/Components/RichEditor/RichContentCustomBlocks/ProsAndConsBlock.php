@@ -63,7 +63,7 @@ class ProsAndConsBlock extends RichContentCustomBlock
     public static function toPreviewHtml(array $config): string
     {
         /** @var view-string $view */
-        $view = 'filament.tiptapblocks.previews.pros-cons';
+        $view = 'filament.rich-editor-custom-blocks.previews.pros-cons';
 
         return view($view, $config)
             ->render();
@@ -72,7 +72,7 @@ class ProsAndConsBlock extends RichContentCustomBlock
     public static function toHtml(array $config, array $data): string
     {
         /** @var view-string $view */
-        $view = 'filament.tiptapblocks.rendered.pros-cons';
+        $view = 'filament.rich-editor-custom-blocks.rendered.pros-cons';
 
         return view($view, $config)
             ->render();

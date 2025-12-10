@@ -3,12 +3,10 @@
     'modelClass'
 ])
 @php
-    $model = $modelClass::withoutGlobalScopes([
-        \App\Models\Scopes\DraftedScope::class
-    ])->find($modelId);
+    $model = $modelClass::withoutGlobalScopes()->find($modelId);
 
     $toc = $article
-        ? \Digitonic\FilamentRichEditorTools\Filament\Utilities\RichEditorUtil::render($article->raw_content, \Digitonic\FilamentRichEditorTools\Enums\RenderType::$toc)
+        ? \Digitonic\FilamentRichEditorTools\Filament\Utilities\RichEditorUtil::render($model->raw_content, \Digitonic\FilamentRichEditorTools\Enums\RenderType::TOC)
         : [];
 
     /**

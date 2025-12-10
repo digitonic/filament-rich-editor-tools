@@ -30,7 +30,7 @@ class TwitterEmbedBlock extends RichContentCustomBlock
     public static function toPreviewHtml(array $config): string
     {
         /** @var view-string $view */
-        $view = 'filament.tiptapblocks.previews.twitter-embed';
+        $view = 'filament.rich-editor-custom-blocks.previews.twitter-embed';
 
         return view($view, $config)
             ->render();
@@ -39,7 +39,7 @@ class TwitterEmbedBlock extends RichContentCustomBlock
     public static function toHtml(array $config, array $data): string
     {
         /** @var view-string $view */
-        $view = 'filament.tiptapblocks.rendered.twitter-embed';
+        $view = 'filament.rich-editor-custom-blocks.rendered.twitter-embed';
 
         return view($view, $config)
             ->render();
