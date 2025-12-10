@@ -1,7 +1,7 @@
 @props(['url', 'caption'])
 
 @php
-$embedVideo = new \App\Utilities\EmbeddableVideo($url);
+$embedVideo = new \Digitonic\FilamentRichEditorTools\Support\EmbeddableVideo($url);
 @endphp
 
 <div>
