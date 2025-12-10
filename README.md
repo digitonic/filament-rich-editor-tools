@@ -1,12 +1,17 @@
 # Filament Rich Editor Tools (Filament v4)
 
-A Laravel package that provides utilities and extensions for Filament's Rich Editor. Today, it focuses on a robust, hierarchical Table of Contents (TOC) feature built on TipTap, with automatic project-wide registration and convenient Renderer macros.
+A package that provides utilities and extensions for Filament's Rich Editor. 
+Today, it focuses on a robust, hierarchical Table of Contents (TOC) feature built on TipTap, with automatic project-wide registration and convenient Renderer macros.
+
+It provides a very easy to use Renderer and Editor that come pre-configured with the blocks you probably want shared between the two to ensure they don't all out of sync.
+It also provides a command to help migrate old tiptap blocks to the new rich editor format.
+
+This package is built to work with the RichEditor. It is not a replacement for it. It just adds some functionality on top.
 
 Key features
-- Automatic project-wide plugin registration via the service provider.
 - Generate a hierarchical Table of Contents from editor content.
+- Common Editor/Renderer with common options pre-configured.
 - Assign stable, unique heading IDs for in-page navigation.
-- Built to be compatible with Filament v4, Livewire v3, and Laravel 12.
 
 ## Requirements
 - PHP 8.4+
@@ -38,13 +43,17 @@ These are registered once and applied automatically to all renderers.
 ## Usage
 
 ### Convert your blocks
-`php artisan filament-rich-editor-tools:migrate-blocks "App\Models\Page" blocks`
+```php 
+php artisan filament-rich-editor-tools:migrate-blocks "App\Models\Page" blocks
+````
 
 Replace the model and field name as needed. This will overwrite existing DB records. So take a backup.
 
 If you have a complex JSON structure with your rich editor located on something like `meta.content` you can use dot notation to specify the field.
 
-`php artisan filament-rich-editor-tools:migrate-blocks "App\Models\Page" meta.content`
+```php 
+php artisan filament-rich-editor-tools:migrate-blocks "App\Models\Page" meta.content
+````
 
 
 ### Use our editor
@@ -143,12 +152,6 @@ Run your tests:
 ```bash
 php artisan test --filter=table of contents
 ```
-
-## FAQ
-
-- Do I need to import or call anything to register the plugin? No — the package auto-registers via the service provider.
-- Will it interfere with my existing editor setup? It only adds a stable `id` attribute to heading nodes and exposes TOC macros. It doesn’t alter your content beyond that.
-- Does it work with dark mode or custom themes? Yes; the extension affects document structure, not presentation.
 
 ## Contributing
 
