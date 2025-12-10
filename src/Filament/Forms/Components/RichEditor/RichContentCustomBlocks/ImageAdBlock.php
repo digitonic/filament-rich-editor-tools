@@ -33,7 +33,7 @@ class ImageAdBlock extends RichContentCustomBlock
     public static function toPreviewHtml(array $config): string
     {
         /** @var view-string $view */
-        $view = 'filament.rich-editor-custom-blocks.previews.image-ad';
+        $view = 'filament-rich-editor-tools::filament.rich-editor-custom-blocks.previews.image-ad';
 
         return view($view, $config)
             ->render();
@@ -42,7 +42,7 @@ class ImageAdBlock extends RichContentCustomBlock
     public static function toHtml(array $config, array $data): string
     {
         /** @var view-string $view */
-        $view = 'filament.rich-editor-custom-blocks.rendered.image-ad';
+        $view = 'filament-rich-editor-tools::filament.rich-editor-custom-blocks.rendered.image-ad';
 
         return view($view, $config)->render();
     }

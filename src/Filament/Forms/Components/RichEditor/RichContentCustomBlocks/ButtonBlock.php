@@ -40,7 +40,7 @@ class ButtonBlock extends RichContentCustomBlock
     public static function toPreviewHtml(array $config): string
     {
         /** @var view-string $view */
-        $view = 'filament.rich-editor-custom-blocks.previews.button';
+        $view = 'filament-rich-editor-tools::filament.rich-editor-custom-blocks.previews.button';
 
         return view($view, $config)
             ->render();
@@ -49,7 +49,7 @@ class ButtonBlock extends RichContentCustomBlock
     public static function toHtml(array $config, array $data): string
     {
         /** @var view-string $view */
-        $view = 'filament.rich-editor-custom-blocks.rendered.button';
+        $view = 'filament-rich-editor-tools::filament.rich-editor-custom-blocks.rendered.button';
 
         return view($view, $config)
             ->render();
