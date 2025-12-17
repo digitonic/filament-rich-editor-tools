@@ -16,7 +16,7 @@ class ProsAndConsBlock extends RichContentCustomBlock
 
     public static function getLabel(): string
     {
-        return 'Pros andcons';
+        return 'Pros and cons';
     }
 
     public static function configureEditorAction(Action $action): Action
