@@ -74,10 +74,7 @@ class RichEditorUtil
     public static function commonChainables(RichContentRenderer|RichEditor $class): RichEditor|RichContentRenderer
     {
         $customBlocks = array_merge(config('filament-rich-editor-tools.custom_blocks', []), [
-            ButtonBlock::class,
             TwitterEmbedBlock::class,
-            GoogleAdBlock::class,
-            ImageAdBlock::class,
             VideoBlock::class,
             ProsAndConsBlock::class,
             TableContentsBlock::class,
