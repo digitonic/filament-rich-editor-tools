@@ -7,7 +7,7 @@ class EmbeddableVideo
     /**
      * @param  mixed[]  $queryParams
      */
-    public function __construct(private string $videoUrl, private array $queryParams = []) {}
+    public function __construct(private string $videoUrl, private array $queryParams = ['wmode' => 'opaque']) {}
 
     /**
      * @param  mixed[]  $queryParams
@@ -54,10 +54,14 @@ class EmbeddableVideo
 
         if (isset($url['query'])) {
             parse_str($url['query'], $query);
-            $queryParams = http_build_query(array_merge($this->queryParams, $query));
 
             if (isset($query['v'])) {
-                return 'https://www.youtube.com/embed/'.(is_string($query['v']) ? $query['v'] : '').'?'.$queryParams;
+                $videoId = is_string($query['v']) ? $query['v'] : '';
+                // Remove 'v' from query params as it's now part of the embed path
+                unset($query['v']);
+                $queryParams = http_build_query(array_merge($this->queryParams, $query));
+
+                return 'https://www.youtube.com/embed/'.$videoId.($queryParams ? '?'.$queryParams : '');
             }
         }
 
@@ -65,7 +69,9 @@ class EmbeddableVideo
             $path = explode('/', $url['path']);
 
             if (isset($path[1])) {
-                return 'https://www.youtube.com/embed/'.$path[1].'?'.http_build_query($this->queryParams);
+                $queryString = http_build_query($this->queryParams);
+
+                return 'https://www.youtube.com/embed/'.$path[1].($queryString ? '?'.$queryString : '');
             }
         }
 
@@ -80,7 +86,9 @@ class EmbeddableVideo
             $path = explode('/', $url['path']);
 
             if (isset($path[1])) {
-                return 'https://player.vimeo.com/video/'.$path[1];
+                $queryString = http_build_query($this->queryParams);
+
+                return 'https://player.vimeo.com/video/'.$path[1].($queryString ? '?'.$queryString : '');
             }
         }
 

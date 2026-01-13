@@ -12,11 +12,13 @@ enum RenderType: int implements HasLabel
     case ARRAY = 2;
     case TOC = 3;
     case RENDERER = 4; // This is for cases when you just want the renderer instance back.
+    case UNSAFE_HTML = 5; // Use this when you need iframes or other elements that get sanitized
 
     public function getLabel(): string
     {
         return match ($this) {
             self::HTML => 'HTML',
+            self::UNSAFE_HTML => 'Unsafe HTML',
             self::ARRAY => 'Array',
             self::TEXT => 'Text',
             self::TOC => 'Table of Contents',
@@ -36,6 +38,7 @@ enum RenderType: int implements HasLabel
 
         return match ($this) {
             self::HTML => $renderer->toHtml(),
+            self::UNSAFE_HTML => $renderer->toUnsafeHtml(), // If you use iFrames, you'll need this
             self::ARRAY => $renderer->toArray(),
             self::TEXT => $renderer->toText(),
             self::TOC => $renderer->toTableOfContents(),

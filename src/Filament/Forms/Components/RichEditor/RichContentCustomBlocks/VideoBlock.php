@@ -33,7 +33,7 @@ class VideoBlock extends RichContentCustomBlock
         /** @var view-string $view */
         $view = 'filament-rich-editor-tools::filament.rich-editor-custom-blocks.previews.video';
 
-        return view($view)->render();
+        return view($view, $config)->render();
     }
 
     public static function toHtml(array $config, array $data): string

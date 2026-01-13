@@ -1,4 +1,4 @@
-@props(['url', 'caption'])
+@props(['url' => '', 'caption' => ''])
 
 @php
 $embedVideo = new \Digitonic\FilamentRichEditorTools\Support\EmbeddableVideo($url);
