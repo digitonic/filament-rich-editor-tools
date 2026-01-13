@@ -51,6 +51,9 @@ This package enhances Filament's Rich Editor through automatic registration and 
 
 4. **Migration command** for legacy content conversion:
    - `php artisan filament-rich-editor-tools:migrate-blocks` to convert old TipTap blocks to Rich Editor format
+   - Automatically migrates `tiptapBlock` → `customBlock` node types
+   - Converts `textStyle` marks to `textColor` marks for Filament 4 compatibility
+   - Maps hex color values to Filament's named color system
 
 5. **Unified Editor/Renderer utilities** that ensure consistency between editing and display modes
 
@@ -59,9 +62,12 @@ These features are registered globally and applied automatically to all Rich Edi
 ## Usage
 
 ### Convert your blocks
+
+The migration command converts content from Filament 3's TiptapEditor format to Filament 4's RichEditor format:
+
 ```php 
 php artisan filament-rich-editor-tools:migrate-blocks "App\Models\Page" blocks
-````
+```
 
 Replace the model and field name as needed. This will overwrite existing DB records. So take a backup.
 
@@ -69,7 +75,55 @@ If you have a complex JSON structure with your rich editor located on something 
 
 ```php 
 php artisan filament-rich-editor-tools:migrate-blocks "App\Models\Page" meta.content
-````
+```
+
+#### What the migration does
+
+**Block Migration:**
+- Converts `tiptapBlock` node types to `customBlock`
+- Renames `attrs.type` to `attrs.id`
+- Renames `attrs.data` to `attrs.config`
+- Normalizes block IDs (removes "Block" suffix, converts to lowercase)
+
+**Color Migration (textStyle → textColor):**
+
+When migrating from Filament 3, colored text stored with `textStyle` marks causes errors in Filament 4:
+> "There is no mark type textStyle in this schema"
+
+The migration automatically converts:
+
+```json
+// Before (Filament 3):
+{
+  "type": "textStyle",
+  "attrs": { "color": "#1E7F75" }
+}
+
+// After (Filament 4):
+{
+  "type": "textColor", 
+  "attrs": { "data-color": "green" }
+}
+```
+
+The migration maps hex colors to Filament's named color system (red, orange, amber, yellow, lime, green, emerald, teal, cyan, sky, blue, indigo, violet, purple, fuchsia, pink, rose, gray).
+
+#### Custom Color Mappings
+
+If you have custom hex colors that need specific mappings, add them to your config:
+
+```php
+// config/filament-rich-editor-tools.php
+return [
+    'color_map' => [
+        '#1E7F75' => 'green',
+        '#custom123' => 'brand',
+        // Add more custom mappings as needed
+    ],
+];
+```
+
+For hex colors not in the map, the migration finds the closest matching color using RGB distance calculation.
 
 
 ### Use our editor
@@ -85,8 +139,51 @@ RichEditorUtil::make('raw_content'),
 In your Filament form or page, to get our renderer do the following:
 
 ```php
-RichEditorUtil::render('raw_content'),
-````
+RichEditorUtil::render($content);
+```
+
+#### Render Types
+
+The renderer supports multiple output formats via the `RenderType` enum:
+
+```php
+use Digitonic\FilamentRichEditorTools\Enums\RenderType;
+use Digitonic\FilamentRichEditorTools\Filament\Utilities\RichEditorUtil;
+
+// Default HTML output (sanitized - safe for untrusted content)
+$html = RichEditorUtil::render($content, RenderType::HTML);
+
+// Unsafe HTML output (preserves iframes, scripts - use for trusted content only)
+$html = RichEditorUtil::render($content, RenderType::UNSAFE_HTML);
+
+// Plain text output
+$text = RichEditorUtil::render($content, RenderType::TEXT);
+
+// Array/JSON output
+$array = RichEditorUtil::render($content, RenderType::ARRAY);
+
+// Table of contents
+$toc = RichEditorUtil::render($content, RenderType::TOC);
+
+// Get the renderer instance for further customization
+$renderer = RichEditorUtil::render($content, RenderType::RENDERER);
+```
+
+#### When to use UNSAFE_HTML
+
+By default, `RenderType::HTML` sanitizes the output and removes potentially dangerous elements like `<iframe>` tags. This is important for security when displaying user-generated content.
+
+However, if you're using custom blocks that contain iframes (like the Video Block for YouTube/Vimeo embeds), you need to use `RenderType::UNSAFE_HTML` to preserve them:
+
+```php
+// Video embeds will appear blank with sanitized HTML
+$html = RichEditorUtil::render($content, RenderType::HTML); // ❌ iframes stripped
+
+// Use UNSAFE_HTML to preserve video embeds
+$html = RichEditorUtil::render($content, RenderType::UNSAFE_HTML); // ✅ iframes preserved
+```
+
+⚠️ **Security Warning:** Only use `UNSAFE_HTML` for trusted content (e.g., admin-created content). Never use it for user-generated content where XSS attacks are a concern.
 
 ### Generate a Table of Contents from content
 
