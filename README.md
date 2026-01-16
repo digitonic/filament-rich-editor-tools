@@ -360,6 +360,20 @@ Publish the configuration file to customize the package behavior:
 php artisan vendor:publish --tag=filament-rich-editor-tools-config
 ```
 
+## Publishing Views (Custom Block Blade Views)
+
+This package includes Blade views used by the built-in custom blocks (Pros & Cons, Video, Twitter/X, Table of Contents).
+
+If you want to override them, publish the views to your application:
+
+```bash
+php artisan vendor:publish --tag=filament-rich-editor-tools-views
+```
+
+This will publish to:
+
+- `resources/views/vendor/filament-rich-editor-tools`
+
 ### Available Configuration Options
 
 ```php
