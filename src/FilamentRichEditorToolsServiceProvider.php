@@ -27,7 +27,12 @@ class FilamentRichEditorToolsServiceProvider extends PackageServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'filament-rich-editor-tools');
         $this->publishes([
             __DIR__.'/../resources/views' => resource_path('views/vendor/filament-rich-editor-tools'),
-        ], 'views');
+        ], 'filament-rich-editor-tools-views');
+
+        // Config
+        $this->publishes([
+            __DIR__.'/../config/filament-rich-editor-tools.php' => config_path('filament-rich-editor-tools.php'),
+        ], 'filament-rich-editor-tools-config');
 
         // Commands
         if ($this->app->runningInConsole()) {
@@ -44,7 +49,6 @@ class FilamentRichEditorToolsServiceProvider extends PackageServiceProvider
     {
 
         $package
-            ->name('filament-rich-editor-tools')
-            ->hasConfigFile();
+            ->name('filament-rich-editor-tools');
     }
 }

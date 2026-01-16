@@ -41,6 +41,7 @@ enum RenderType: int implements HasLabel
             self::UNSAFE_HTML => $renderer->toUnsafeHtml(), // If you use iFrames, you'll need this
             self::ARRAY => $renderer->toArray(),
             self::TEXT => $renderer->toText(),
+            /** @phpstan-ignore-next-line */
             self::TOC => $renderer->toTableOfContents(),
             default => $renderer,
         };
