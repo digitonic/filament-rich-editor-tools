@@ -28,10 +28,9 @@ class TableContentsBlock extends RichContentCustomBlock
             ->schema([
                 Hidden::make('modelId')
                     /** @phpstan-ignore-next-line */
-                    ->default(fn (?Model $model) => ($model) ? $model->id : null),
+                    ->default(fn ($record) => (empty($record) ? null : $record->getKey())),
                 Hidden::make('modelClass')
-                    ->default(fn (?Model $model) => ($model) ? get_class($model) : null),
-                // Get the field name that the rich editor is stored against
+                    ->default(fn($model) => $model),
                 Hidden::make('modelField')
                     ->default($parentComponentState),
             ]);

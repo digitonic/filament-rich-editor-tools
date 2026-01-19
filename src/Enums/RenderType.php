@@ -36,6 +36,11 @@ enum RenderType: int implements HasLabel
             return '';
         }
 
+        if(config('filament-rich-editor-tools.table_of_contents.enabled') && $this !== self::TOC) {
+            $renderer->processHeaderIds(3);
+            $renderer->parseHeadings();
+        }
+
         return match ($this) {
             self::HTML => $renderer->toHtml(),
             self::UNSAFE_HTML => $renderer->toUnsafeHtml(), // If you use iFrames, you'll need this
