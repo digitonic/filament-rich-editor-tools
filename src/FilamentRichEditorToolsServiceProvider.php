@@ -47,8 +47,6 @@ class FilamentRichEditorToolsServiceProvider extends PackageServiceProvider
 
     public function configurePackage(Package $package): void
     {
-
-        $package
-            ->name('filament-rich-editor-tools');
+        $package->name('filament-rich-editor-tools');
     }
 }

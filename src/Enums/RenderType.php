@@ -29,11 +29,18 @@ enum RenderType: int implements HasLabel
     /**
      * Get the render method for the given RichContentRenderer based on the RenderType.
      */
-    public function getRenderMethod(RichContentRenderer $renderer): mixed
+    public function getRenderMethod(RichContentRenderer $renderer, int $maxDepth = 3): mixed
     {
         // If the content is empty, we're better just returning an empty string for now
         if (empty($renderer->getEditor()->getDocument())) {
             return '';
+        }
+
+        if (config('filament-rich-editor-tools.table_of_contents.enabled') && $this !== self::TOC) {
+            /** @phpstan-ignore-next-line */
+            $renderer->processHeaderIds($maxDepth);
+            /** @phpstan-ignore-next-line */
+            $renderer->parseHeadings($maxDepth);
         }
 
         return match ($this) {

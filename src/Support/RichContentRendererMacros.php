@@ -12,7 +12,6 @@ class RichContentRendererMacros
     {
         // Generate hierarchical Table of Contents from current renderer content.
         RichContentRenderer::macro('toTableOfContents', function (int $maxDepth = 3): array {
-
             /** @var RichContentRenderer $this */
             if (empty($this->content)) {
                 return [];
@@ -35,7 +34,8 @@ class RichContentRendererMacros
         });
 
         // Assign unique ids to heading nodes within an Editor instance up to a max depth.
-        RichContentRenderer::macro('processHeaderIds', function (Editor $editor, int $maxDepth = 3): void {
+        RichContentRenderer::macro('processHeaderIds', function (int $maxDepth = 3): RichContentRenderer {
+            $editor = $this->getEditor();
             /** @var RichContentRenderer $this */
             $idCounts = [];
 
@@ -66,6 +66,42 @@ class RichContentRendererMacros
 
                 $node->attrs->id = $uniqueId;
             });
+
+            $content = $editor->getDocument();
+            $this->content($content);
+
+            return $this;
+        });
+
+        /**
+         * Actually create the # reference in the text
+         */
+        RichContentRenderer::macro('parseHeadings', function (int $maxDepth = 3): RichContentRenderer {
+            $editor = $this->getEditor();
+
+            $editor->descendants(function (&$node) use ($maxDepth) {
+                if ($node->type !== 'heading' || $node->attrs->level > $maxDepth) {
+                    return;
+                }
+
+                array_unshift($node->content, (object) [
+                    'type' => 'text',
+                    'text' => '#',
+                    'marks' => [
+                        [
+                            'type' => 'link',
+                            'attrs' => [
+                                'href' => '#'.$node->attrs->id,
+                            ],
+                        ],
+                    ],
+                ]);
+            });
+
+            $content = $editor->getDocument();
+            $this->content($content);
+
+            return $this;
         });
     }
 

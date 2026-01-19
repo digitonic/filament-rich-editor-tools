@@ -1,12 +1,15 @@
 @props([
     'modelId',
-    'modelClass'
+    'modelClass',
+    'modelField'
 ])
 @php
     $model = $modelClass::withoutGlobalScopes()->find($modelId);
+    // ModelField comes in the format of data.content, we don't need the data. part
+    $modelField = str_replace('data.', '', $modelField);
 
-    $toc = $article
-        ? \Digitonic\FilamentRichEditorTools\Filament\Utilities\RichEditorUtil::render($model->raw_content, \Digitonic\FilamentRichEditorTools\Enums\RenderType::TOC)
+    $toc = $model
+        ? \Digitonic\FilamentRichEditorTools\Filament\Utilities\RichEditorUtil::render(data_get($model, $modelField), \Digitonic\FilamentRichEditorTools\Enums\RenderType::TOC)
         : [];
 
     /**
@@ -44,7 +47,7 @@
         return $html;
     };
 @endphp
-@if($article && !empty($toc))
+@if($model && !empty($toc))
     <nav aria-label="Table of contents" class="not-prose rounded-md bg-gray-50 dark:bg-gray-800/40 p-4 ring-1 ring-gray-200 dark:ring-gray-700">
         <h4 class="text-xs font-semibold tracking-wide text-gray-600 dark:text-gray-400 uppercase mb-3">On this page</h4>
         <div class="toc-content text-sm">
