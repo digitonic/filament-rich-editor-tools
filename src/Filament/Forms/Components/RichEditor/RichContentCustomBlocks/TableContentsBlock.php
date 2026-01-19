@@ -5,7 +5,6 @@ namespace Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor
 use Filament\Actions\Action;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor\RichContentCustomBlock;
-use Illuminate\Database\Eloquent\Model;
 
 class TableContentsBlock extends RichContentCustomBlock
 {
@@ -27,10 +26,9 @@ class TableContentsBlock extends RichContentCustomBlock
             ->modalDescription('Configure the table contents block')
             ->schema([
                 Hidden::make('modelId')
-                    /** @phpstan-ignore-next-line */
                     ->default(fn ($record) => (empty($record) ? null : $record->getKey())),
                 Hidden::make('modelClass')
-                    ->default(fn($model) => $model),
+                    ->default(fn ($model) => $model),
                 Hidden::make('modelField')
                     ->default($parentComponentState),
             ]);

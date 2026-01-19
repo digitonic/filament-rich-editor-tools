@@ -20,12 +20,12 @@ class RichEditorUtil
     /**
      * @param  array<string,mixed>|string|null  $content
      */
-    public static function render(array|null|string $content, RenderType $renderType = RenderType::HTML): string|array|RichContentRenderer
+    public static function render(array|null|string $content, RenderType $renderType = RenderType::HTML, int $maxDepth = 3): string|array|RichContentRenderer
     {
         $renderer = RichContentRenderer::make($content);
         $renderer = self::commonChainables($renderer);
 
-        return $renderType->getRenderMethod($renderer);
+        return $renderType->getRenderMethod($renderer, $maxDepth);
     }
 
     public static function make(string $field, string $label = 'Content'): RichEditor

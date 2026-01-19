@@ -91,7 +91,7 @@ class RichContentRendererMacros
                         [
                             'type' => 'link',
                             'attrs' => [
-                                'href' => '#' . $node->attrs->id,
+                                'href' => '#'.$node->attrs->id,
                             ],
                         ],
                     ],
