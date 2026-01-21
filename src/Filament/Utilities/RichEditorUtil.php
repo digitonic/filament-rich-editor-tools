@@ -3,10 +3,6 @@
 namespace Digitonic\FilamentRichEditorTools\Filament\Utilities;
 
 use Digitonic\FilamentRichEditorTools\Enums\RenderType;
-use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ProsAndConsBlock;
-use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\TableContentsBlock;
-use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\TwitterEmbedBlock;
-use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\VideoBlock;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Filament\Forms\Components\RichEditor\TextColor;
@@ -38,10 +34,10 @@ class RichEditorUtil
             ])
             ->floatingToolbars([
                 'paragraph' => [
-                    'bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link',
+                    'bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link', 'h1', 'h2', 'h3',
                 ],
                 'heading' => [
-                    'h2', 'h3',
+                    'h1', 'h2', 'h3',
                 ],
                 'grid' => [
                     'gridDelete',
@@ -55,8 +51,8 @@ class RichEditorUtil
                 ],
             ])
             ->toolbarButtons([
-                ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link', 'textColor'],
-                ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
+                ['bold', 'italic', 'underline', 'strike', 'link', 'textColor'],
+                ['alignStart', 'alignCenter', 'alignEnd'],
                 ['details'],
                 ['grid'],
                 ['code'],
@@ -70,12 +66,7 @@ class RichEditorUtil
 
     public static function commonChainables(RichContentRenderer|RichEditor $class): RichEditor|RichContentRenderer
     {
-        $customBlocks = array_merge(config('filament-rich-editor-tools.custom_blocks', []), [
-            TwitterEmbedBlock::class,
-            VideoBlock::class,
-            ProsAndConsBlock::class,
-            TableContentsBlock::class,
-        ]);
+        $customBlocks = config('filament-rich-editor-tools.custom_blocks', []);
 
         return $class
             ->customBlocks($customBlocks)
