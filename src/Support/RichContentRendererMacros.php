@@ -40,11 +40,7 @@ class RichContentRendererMacros
             $idCounts = [];
 
             $editor->descendants(function (&$node) use ($maxDepth, &$idCounts): void {
-                if ($node->type !== 'heading') {
-                    return;
-                }
-
-                if ($node->attrs->level > $maxDepth) {
+                if ($node->type !== 'heading' || $node->attrs->level > $maxDepth || ! isset($node->content)) {
                     return;
                 }
 
