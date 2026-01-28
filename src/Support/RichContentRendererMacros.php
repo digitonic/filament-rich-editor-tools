@@ -76,7 +76,7 @@ class RichContentRendererMacros
             $editor = $this->getEditor();
 
             $editor->descendants(function (&$node) use ($maxDepth) {
-                if ($node->type !== 'heading' || $node->attrs->level > $maxDepth) {
+                if ($node->type !== 'heading' || $node->attrs->level > $maxDepth || ! isset($node->content)) {
                     return;
                 }
 
