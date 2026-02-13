@@ -1,12 +1,12 @@
-# Filament Rich Editor Tools (Filament v4)
+# Filament Rich Editor Tools (Filament 4/5 Panels)
 
 
-This package integrates deeply with Filament 4's Rich Editor via macros and service provider hooks, effectively taking over and enhancing much of the core Rich Editor functionality to provide a more feature-rich experience.
+This package integrates deeply with Filament 4/5 Panels Rich Editor via macros and service provider hooks, effectively taking over and enhancing much of the core Rich Editor functionality to provide a more feature-rich experience.
 
 ## Requirements
 - PHP 8.4+
 - Laravel 12
-- Filament v4 Rich Editor
+- Filament 4/5 Panels Rich Editor
 - Livewire v3
 
 ## Installation
@@ -21,7 +21,7 @@ The service provider will be auto-discovered. No manual registration is needed.
 
 ## Overview
 
-This package extends Filament v4's Rich Editor through a comprehensive integration that:
+This package extends Filament 4/5 Panels Rich Editor through a comprehensive integration that:
 
 - **Automatically enhances all Rich Editor instances** with additional functionality via Laravel's service container
 - **Provides a unified `RichEditorUtil` class** that ensures your editor and renderer configurations stay synchronized  
@@ -227,6 +227,96 @@ RichContentRenderer::make('')->processHeaderIds($editor, maxDepth: 3);
 
 // The editor now contains heading nodes with unique `id` attributes.
 ```
+
+### Factory Trait: BuildsRichEditorContent
+
+Use the included trait in your Laravel model factories to generate valid Rich Editor JSON structures for tests and seed data.
+
+```php
+use Digitonic\FilamentRichEditorTools\Database\Factories\Concerns\BuildsRichEditorContent;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class PostFactory extends Factory
+{
+    use BuildsRichEditorContent;
+
+    public function definition(): array
+    {
+        return [
+            'content' => $this->richEditorParagraphs(3),
+        ];
+    }
+}
+```
+
+The trait provides three helpers:
+
+- `richEditorParagraph(?string $text = null): array`
+- `richEditorDocument(array $nodes): array`
+- `richEditorParagraphs(int $count = 1): array`
+
+Example output for `richEditorParagraph('Hello world')`:
+
+```json
+{
+  "type": "paragraph",
+  "content": [
+    {
+      "type": "text",
+      "text": "Hello world"
+    }
+  ]
+}
+```
+
+Example output for `richEditorDocument([$this->richEditorParagraph('Hello world')])`:
+
+```json
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Hello world"
+        }
+      ]
+    }
+  ]
+}
+```
+
+Example output shape for `richEditorParagraphs(2)`:
+
+```json
+{
+  "type": "doc",
+  "content": [
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Generated paragraph text..."
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": [
+        {
+          "type": "text",
+          "text": "Generated paragraph text..."
+        }
+      ]
+    }
+  ]
+}
+```
+
+`richEditorParagraphs()` uses `$this->faker`, so call it from within a standard Laravel `Factory` context where Faker is available.
 
 ## Custom Blocks
 

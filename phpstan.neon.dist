@@ -6,6 +6,9 @@ parameters:
     paths:
         - src
         - config
+    ignoreErrors:
+        - identifier: trait.unused
+          path: src/Database/Factories/Concerns/BuildsRichEditorContent.php
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
