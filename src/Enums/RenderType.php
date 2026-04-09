@@ -37,9 +37,7 @@ enum RenderType: int implements HasLabel
         }
 
         if (config('filament-rich-editor-tools.table_of_contents.enabled') && $this !== self::TOC) {
-            /** @phpstan-ignore-next-line */
             $renderer->processHeaderIds($maxDepth);
-            /** @phpstan-ignore-next-line */
             $renderer->parseHeadings($maxDepth);
         }
 
@@ -48,7 +46,6 @@ enum RenderType: int implements HasLabel
             self::UNSAFE_HTML => $renderer->toUnsafeHtml(), // If you use iFrames, you'll need this
             self::ARRAY => $renderer->toArray(),
             self::TEXT => $renderer->toText(),
-            /** @phpstan-ignore-next-line */
             self::TOC => $renderer->toTableOfContents(),
             default => $renderer,
         };
