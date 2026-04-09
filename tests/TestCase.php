@@ -2,8 +2,12 @@
 
 namespace Digitonic\FilamentRichEditorTools\Tests;
 
+use BladeUI\Icons\BladeIconsServiceProvider;
 use Digitonic\FilamentRichEditorTools\FilamentRichEditorToolsServiceProvider;
+use Filament\FilamentServiceProvider;
+use Filament\Support\SupportServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -20,10 +24,10 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
-            \Livewire\LivewireServiceProvider::class,
-            \Filament\Support\SupportServiceProvider::class,
-            \BladeUI\Icons\BladeIconsServiceProvider::class,
-            \Filament\FilamentServiceProvider::class,
+            LivewireServiceProvider::class,
+            SupportServiceProvider::class,
+            BladeIconsServiceProvider::class,
+            FilamentServiceProvider::class,
             FilamentRichEditorToolsServiceProvider::class,
         ];
     }
@@ -31,11 +35,5 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
-
-        /*
-         foreach (\Illuminate\Support\Facades\File::allFiles(__DIR__ . '/../database/migrations') as $migration) {
-            (include $migration->getRealPath())->up();
-         }
-         */
     }
 }
