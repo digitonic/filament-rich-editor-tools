@@ -2,10 +2,13 @@
 
 namespace Digitonic\FilamentRichEditorTools\Filament\Utilities;
 
+use Digitonic\FilamentRichEditorTools\Contracts\ProvidesRichEditorMentionProviders;
 use Digitonic\FilamentRichEditorTools\Enums\RenderType;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\RichEditor\MentionProvider;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Filament\Forms\Components\RichEditor\TextColor;
+use InvalidArgumentException;
 
 /**
  * Due to the nature of how RichContent works, whatever you do to the editor,
@@ -67,6 +70,11 @@ class RichEditorUtil
     public static function commonChainables(RichContentRenderer|RichEditor $class): RichEditor|RichContentRenderer
     {
         $customBlocks = config('filament-rich-editor-tools.custom_blocks', []);
+        $mentionProviders = self::getMentionProviders();
+
+        if (filled($mentionProviders)) {
+            $class->mentions($mentionProviders);
+        }
 
         return $class
             ->customBlocks($customBlocks)
@@ -75,5 +83,29 @@ class RichEditorUtil
                 'warning' => TextColor::make('Warning', '#f59e0b', darkColor: '#fbbf24'),
                 ...TextColor::getDefaults(),
             ]);
+    }
+
+    /**
+     * @return array<MentionProvider>
+     */
+    protected static function getMentionProviders(): array
+    {
+        $mentionProviders = [];
+
+        foreach (config('filament-rich-editor-tools.mention_providers', []) as $provider) {
+            $resolvedProvider = app($provider);
+
+            if (! $resolvedProvider instanceof ProvidesRichEditorMentionProviders) {
+                throw new InvalidArgumentException(sprintf(
+                    'Configured rich editor mention provider [%s] must implement [%s].',
+                    $provider,
+                    ProvidesRichEditorMentionProviders::class,
+                ));
+            }
+
+            array_push($mentionProviders, ...$resolvedProvider->getMentionProviders());
+        }
+
+        return $mentionProviders;
     }
 }

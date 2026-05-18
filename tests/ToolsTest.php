@@ -3,6 +3,7 @@
 use Digitonic\FilamentRichEditorTools\Enums\RenderType;
 use Digitonic\FilamentRichEditorTools\Filament\Forms\Components\RichEditor\Plugins\TableOfContentsPlugin;
 use Digitonic\FilamentRichEditorTools\Filament\Utilities\RichEditorUtil;
+use Digitonic\FilamentRichEditorTools\Tests\Fixtures\RichEditorMentionProvider;
 
 it('can test', function () {
     expect(true)->toBeTrue();
@@ -43,4 +44,57 @@ it('Check we can access the to text functions', function (): void {
 
     expect($renderer)->toBeString();
     expect($renderer)->toBe('Example');
+});
+
+it('does not apply mention providers by default', function (): void {
+    $editor = RichEditorUtil::make('content');
+    $renderer = RichEditorUtil::render('<p>Example</p>', RenderType::RENDERER);
+
+    expect($editor->hasMentions())->toBeFalse();
+    expect($renderer->getMentionProviders())->toBeNull();
+});
+
+it('applies configured mention providers to editor instances', function (): void {
+    config()->set('filament-rich-editor-tools.mention_providers', [
+        RichEditorMentionProvider::class,
+    ]);
+
+    $editor = RichEditorUtil::make('content');
+    $mentionProviders = (fn (): array => $this->mentions)->call($editor);
+
+    expect($mentionProviders)->toHaveCount(1);
+    expect($mentionProviders[0]->getChar())->toBe('@');
+});
+
+it('applies configured mention providers to renderer instances', function (): void {
+    config()->set('filament-rich-editor-tools.mention_providers', [
+        RichEditorMentionProvider::class,
+    ]);
+
+    $content = [
+        'type' => 'doc',
+        'content' => [
+            [
+                'type' => 'paragraph',
+                'content' => [
+                    [
+                        'type' => 'text',
+                        'text' => 'Hello ',
+                    ],
+                    [
+                        'type' => 'mention',
+                        'attrs' => [
+                            'id' => '1',
+                            'char' => '@',
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ];
+
+    $renderer = RichEditorUtil::render($content, RenderType::RENDERER);
+
+    expect($renderer->getMentionProviders())->toHaveCount(1);
+    expect($renderer->toHtml())->toContain('Jane Doe');
 });

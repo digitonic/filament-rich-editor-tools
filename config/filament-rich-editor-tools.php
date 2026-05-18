@@ -20,4 +20,9 @@ return [
         TableContentsBlock::class,
     ],
 
+    // Classes implementing ProvidesRichEditorMentionProviders, resolved from the container.
+    'mention_providers' => [
+        //
+    ],
+
 ];
